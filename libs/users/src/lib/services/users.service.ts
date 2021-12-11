@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../models/users';
 import * as countriesLib from 'i18n-iso-countries';
 import { UsersFacade } from '../state/users.facade';
+import { environment } from 'environments/environment';
 
 declare const require: any;
 
@@ -12,6 +13,8 @@ declare const require: any;
 })
 export class UsersService {
 
+  apiURLUsers = environment.apiUrl + 'user';
+
   constructor(private http: HttpClient,
               private usersFacade: UsersFacade) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -19,24 +22,24 @@ export class UsersService {
   }
     
     getUsers(): Observable<User[]> {
-      return this.http.get<User[]>('http://localhost:3000/api/v1/user')
+      return this.http.get<User[]>(this.apiURLUsers)
     
     }
      getUser(userId: string): Observable<User> {
-       return this.http.get<User>(`http://localhost:3000/api/v1/user/${userId}`);
+       return this.http.get<User>(`${this.apiURLUsers}/${userId}`);
          }
 
      createUser(user: User): Observable<User> {
-       return this.http.post<User>('http://localhost:3000/api/v1/user',user);
+       return this.http.post<User>(this.apiURLUsers,user);
      }
 
      updateUser(userId: string,user: User ): Observable<User> {
-       return this.http.put<User>(`http://localhost:3000/api/v1/user/${userId}`,user);
+       return this.http.put<User>(`${this.apiURLUsers}/${userId}`,user);
      }
 
 
      deleteUser(userid: string): Observable<any> {
-          return this.http.delete<any>(`http://localhost:3000/api/v1/user/${userid}`);
+          return this.http.delete<any>(`${this.apiURLUsers}/${userid}`);
      }    
 
      getCountries(): { id: string; name: string }[] {

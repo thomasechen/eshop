@@ -18,7 +18,8 @@
             "@holystone/orders": ["libs/orders/src/index.ts"],
             "@holystone/products": ["libs/products/src/index.ts"],
             "@holystone/ui": ["libs/ui/src/index.ts"],
-            "@holystone/users": ["libs/users/src/index.ts"]
+            "@holystone/users": ["libs/users/src/index.ts"],
+            "@env/*": ["environments/*"]
         }
     },
     "exclude": ["node_modules", "tmp"]

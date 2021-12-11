@@ -5,43 +5,47 @@ import { Order } from '../models/orders';
 import { OrderItem } from '../models/order-item';
 import { switchMap } from 'rxjs/operators';
 import { StripeService } from 'ngx-stripe';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService {
 
+  apiURLOrders = environment.apiUrl+'order';
+  apiURLProducts = environment.apiUrl+'products';
+
   constructor(private http: HttpClient,private stripeService: StripeService) { }
 
   getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>('http://localhost:3000/api/v1/order')
+    return this.http.get<Order[]>(this.apiURLOrders)
   
   }
   getOrder(OrderId: string): Observable<Order> {
-    return this.http.get<Order>(`http://localhost:3000/api/v1/order/${OrderId}`)
+    return this.http.get<Order>(`${this.apiURLOrders}/${OrderId}`)
    
   }
 
   createOrder(Order: Order): Observable<Order> {
-    return this.http.post<Order>('http://localhost:3000/api/v1/order',Order);
+    return this.http.post<Order>(this.apiURLOrders,Order);
   }
 
   updateOrder(orderStatus: {status:string}, OrderId:string): Observable<Order> {
-    return this.http.put<Order>(`http://localhost:3000/api/v1/order/${OrderId}`,orderStatus);
+    return this.http.put<Order>(`${this.apiURLOrders}/${OrderId}`,orderStatus);
   }
 
 
   deleteOrder(OrderId: string): Observable<any> {
-       return this.http.delete<any>(`http://localhost:3000/api/v1/order/${OrderId}`);
+       return this.http.delete<any>(`${this.apiURLOrders}/${OrderId}`);
   }    
 
   getProduct(productId: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/v1/products/${productId}`)
+    return this.http.get<any>(`${this.apiURLProducts}/${productId}`)
  
   }
 
   createCheckoutSession(orderItem: OrderItem[])  {
-    return this.http.post(`http://localhost:3000/api/v1/order/create-checkout-session`,orderItem).pipe(
+    return this.http.post(`${this.apiURLOrders}/create-checkout-session`,orderItem).pipe(
       switchMap(( session: any ) => {
       return this.stripeService.redirectToCheckout({sessionId : session.id})
     }));
